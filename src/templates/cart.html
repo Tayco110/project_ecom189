@@ -1,0 +1,137 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrinho de Compras</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">E-commerce</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register">Register</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/cart">Cart</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Carrinho de Compras</h2>
+        <div class="list-group">
+            {% for item in cart_items %}
+                <div class="list-group-item">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h5 class="mb-1">Produto: {{item['name']}} </h5>
+                            <p class="mb-1">Descrição do produto: {{item['description']}}</p>
+                        </div>
+                        <div class="col-sm-4" style="text-align: right;">
+                            <button class="btn btn-danger btn-sm" onclick="removeItem('{{ item.product }}')">Remover</button>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="list-group-item">
+                    Seu carrinho está vazio.
+                </div>
+            {% endfor %}
+        </div>
+        <div class="mt-4">
+            <a href="/cart/checkout" class="btn btn-primary">Finalizar Compra</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        function removeItem(productId) {
+            console.log("Removendo produto", productId);
+        }
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrinho de Compras</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .container {
+            padding-top: 80px; /* Ajuste para a navbar fixa */
+        }
+        .product-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+        .product-image {
+            max-height: 150px; /* Ajuste a altura conforme necessário */
+        }
+        .product-info {
+            padding-left: 20px; /* Espaço entre imagem e informações */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar aqui -->
+    <div class="container">
+        <h2>Carrinho de Compras</h2>
+        {% if cart_items %}
+            {% for item in cart_items %}
+                <div class="product-item row">
+                    <div class="col-md-2">
+                        <img src="{{ item['image_url'] }}" alt="{{ item['name'] }}" class="product-image img-fluid">
+                    </div>
+                    <div class="col-md-10 product-info">
+                        <h3>{{ item['name'] }}</h3>
+                        <p>{{ item['description'] }}</p>
+                        <p>Preço: {{ item['price'] }}</p>
+                        <form action="/cart/remove" method="post">
+                            <input type="hidden" name="product_id" value="{{ item['product_id'] }}">
+                            <button type="submit" class="btn btn-danger">Remover</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="text-right">
+                <form action="/cart/checkout" method="post">
+                    <button type="submit" class="btn btn-success">Finalizar Compra</button>
+                </form>
+                </div>
+                    {% else %}
+                    <p>Seu carrinho está vazio.</p>
+                    {% endif %}
+                </div>
+        <!-- Scripts do Bootstrap aqui -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script>
+            function removeItem(productId) {
+                // Aqui você pode adicionar uma requisição AJAX para remover o item do carrinho
+                console.log("Removendo produto", productId);
+            }
+        </script>
+</body>
+</html>
+
+
