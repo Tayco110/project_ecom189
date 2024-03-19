@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script>
+        function isLogged(value) {
+            if(!!value) {
+                window.location.href = '/';
+            }
+        }
+    </script>
 </head>
-<body>
+<body onload="isLogged('{{ session['user'] }}')">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/">E-commerce</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,7 +30,7 @@
                     <a class="nav-link" href="/register">Register</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/cart">Cart</a>
+                    <a class="nav-link" href="/cart">Carrinho</a>
                 </li>
             </ul>
         </div>
@@ -42,10 +49,32 @@
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="button" onclick="login()" class="btn btn-primary">Login</button>
                 </form>
             </div>
         </div>
     </div>
+<script>
+    function login() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        console.log(email, password);
+        const formData = new FormData();
+                formData.append('email', email);
+                formData.append('password', password)
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/login', true);
+                xhr.onload = function () {
+                    console.log(xhr)
+                    if (xhr.status !== 200) {
+                        alert('Login falhou');
+                    } else {
+                        window.location.href = xhr.responseURL;
+                    }
+                };
+                xhr.send(formData);
+    }
+</script>
 </body>
 </html>

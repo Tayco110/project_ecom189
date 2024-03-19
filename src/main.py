@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+import json
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import requests
 
 app = Flask(__name__)
@@ -53,9 +54,16 @@ def cart():
         return redirect(url_for('cart'))
     else:
         response = requests.get(f'{CART_SERVICE_URL}/cart')
-        cart_items = response.json()
+        cart_items = [json.loads(item.replace("'", '"')) for item in response.json()]
         return render_template('cart.html', cart_items=cart_items)
 
+@app.route('/cart/remove', methods=['POST'])
+def remove_cart():
+    remove_data = {
+        'product_id': request.form['product_id']
+    }
+    requests.post(f'{CART_SERVICE_URL}/cart/remove', json=remove_data)
+    return redirect(url_for('cart'))
 @app.route('/cart/checkout', methods=['POST'])
 def checkout():
     requests.post(f'{CART_SERVICE_URL}/cart/checkout')
@@ -68,7 +76,7 @@ def order():
         'product_id': request.form['product_id']
     }
     requests.post(f'{ORDER_SERVICE_URL}/orders', json=order_data)
-    return redirect(url_for('index'))
+    return redirect(url_for('cart'))
 
 if __name__ == '__main__':
     app.run(port=5000)
